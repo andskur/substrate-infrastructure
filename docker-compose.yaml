@@ -6,7 +6,7 @@ services:
     container_name: alice
     restart: always
     volumes:
-      - ./data/alice:/data
+      - ./data/chain/alice:/data
     ports:
       - 9944:9944
       - 30333:30333
@@ -33,7 +33,7 @@ services:
     container_name: bob
     restart: always
     volumes:
-      - ./data/bob:/data
+      - ./data/chain/bob:/data
     ports:
       - 9943:9944
     networks:
@@ -61,7 +61,7 @@ services:
     container_name: charlie
     restart: always
     volumes:
-      - ./data/charlie:/data
+      - ./data/chain/charlie:/data
     ports:
       - 9945:9944
     networks:
@@ -124,29 +124,60 @@ services:
     container_name: prometheus
     restart: always
     depends_on:
+      - cadvisor
       - alice
       - charlie
       - bob  
     ports:
       - 9090:9090
     volumes:
-      - ./prometheus/:/etc/prometheus/
+      - ./prometheus:/etc/prometheus/
+      - ./data/monitoring/prometheus:/prometheus  
     networks:
       - panlog
+    command: >
+              --config.file=/etc/prometheus/prometheus.yml
+              --storage.tsdb.path=/prometheus
 
   grafana:
     image: grafana/grafana
     container_name: grafana
     restart: always
+    ports:
+      - 3001:3000
     user: "104"
     depends_on:
       - prometheus
-    ports:
-      - 3001:3000
     volumes:
-      - ./grafana/provisioning/:/etc/grafana/provisioning
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./data/monitoring/graphana:/var/lib/grafana  
     networks:
       - panlog
 
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    restart: always
+    ports:
+      - 9100:9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro    
+    networks:
+      - panlog
+
+  cadvisor:
+    image: google/cadvisor
+    container_name: cadvisor
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - panlog
+        
 networks:
   panlog:
