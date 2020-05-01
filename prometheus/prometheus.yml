@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'substrate_validator-a'
+    static_configs:
+      - targets: ['alice:9615']
+        labels:
+          network: testnet
+      - targets: ['bob:9615']
+        labels:
+          network: testnet
+      - targets: ['charlie:9615']
+        labels:
+          network: testnet
