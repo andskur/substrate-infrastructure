@@ -1,13 +1,17 @@
 version: '3.7'
 
 services:
-  alice:
-    image: panlog/panlog-node:latest
-    container_name: alice
+  thrall:
+    image: andskur/substrate:latest
+    container_name: thrall
     restart: always
     volumes:
-      - ./data/chain/alice:/data
+      - ./data/chain/thrall:/data
+      - ./keys/thrall:/keys
+      - ./chainSpec:/chainSpec
+      - ./scripts:/scripts  
     ports:
+      - 9933:9933
       - 9944:9944
       - 30333:30333
     networks:
@@ -15,9 +19,10 @@ services:
     depends_on:
       - telemetry-backend
     command: >
+             --name thrall
              --base-path /data
-             --chain local
-             --alice
+             --chain /chainSpec/composeLocalSpecRaw.json
+             --node-key-file /keys/node.key
              --port 30333
              --ws-port 9944
              --rpc-port 9933
@@ -25,66 +30,68 @@ services:
              --unsafe-ws-external
              --rpc-cors all
              --validator
-             --telemetry-url 'ws://telemetry-backend:8000/submit 0'
              --prometheus-external
 
-  bob:
-    image: panlog/panlog-node:latest
-    container_name: bob
+  jaina:
+    image: andskur/substrate:latest
+    container_name: jaina
     restart: always
     volumes:
-      - ./data/chain/bob:/data
+      - ./data/chain/jaina:/data
+      - ./keys/jaina:/keys
+      - ./chainSpec:/chainSpec
+      - ./scripts:/scripts  
     ports:
-      - 9943:9944
-    networks:
-      - panlog
-    depends_on:
-      - telemetry-backend
-      - alice  
-    command: >
-             --base-path /data
-             --chain local
-             --bob
-             --port 30333
-             --ws-port 9944
-             --rpc-port 9933
-             --unsafe-rpc-external
-             --unsafe-ws-external
-             --validator
-             --rpc-cors all
-             --telemetry-url 'ws://telemetry-backend:8000/submit 0'
-             --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/QmZDaPqukwyMEL611soGCvxNR6qikkrdfwFZe57BgVNW3v
-             --prometheus-external
-
-  charlie:
-    image: panlog/panlog-node:latest
-    container_name: charlie
-    restart: always
-    volumes:
-      - ./data/chain/charlie:/data
-    ports:
+      - 9934:9933
       - 9945:9944
+      - 30334:30333
     networks:
       - panlog
     depends_on:
       - telemetry-backend
-      - alice  
+      - thrall  
     command: >
+             --name jaina
              --base-path /data
-             --chain local
-             --charlie
+             --chain /chainSpec/composeLocalSpecRaw.json
+             --node-key-file /keys/node.key
              --port 30333
              --ws-port 9944
              --rpc-port 9933
              --unsafe-rpc-external
              --unsafe-ws-external
              --rpc-cors all
-             --telemetry-url 'ws://telemetry-backend:8000/submit 0'
-             --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/QmZDaPqukwyMEL611soGCvxNR6qikkrdfwFZe57BgVNW3v
+             --validator
+             --prometheus-external
+
+  kairn:
+    image: andskur/substrate:latest
+    container_name: kairn
+    restart: always
+    volumes:
+      - ./data/chain/kairn:/data
+      - ./chainSpec:/chainSpec
+    ports:
+      - 9946:9944
+    networks:
+      - panlog
+    depends_on:
+      - telemetry-backend
+      - thrall  
+    command: >
+             --name kairn
+             --base-path /data
+             --chain /chainSpec/composeLocalSpecRaw.json
+             --port 30333
+             --ws-port 9944
+             --rpc-port 9933
+             --rpc-external
+             --ws-external
+             --rpc-cors all
              --prometheus-external
 
   panlog-ui:
-    image: panlog/panlog-ui:latest
+    image: andskur/substrate-ui:latest
     container_name: panlog-ui
     restart: always
     ports:
@@ -93,7 +100,7 @@ services:
       - panlog
 
   telemetry-backend:
-    image: panlog/telemetry-backend:latest
+    image: andskur/telemetry-backend:latest
     container_name: telemetry-backend
     restart: always
     environment:
@@ -107,7 +114,7 @@ services:
 
   
   telemetry-frontend:
-    image: panlog/telemetry-frontend:latest
+    image: andskur/telemetry-frontend:latest
     container_name: telemetry-frontend
     restart: always
     environment:
@@ -125,9 +132,9 @@ services:
     restart: always
     depends_on:
       - cadvisor
-      - alice
-      - charlie
-      - bob  
+      - thrall
+      - jaina
+      - kairn  
     ports:
       - 9090:9090
     volumes:
@@ -181,3 +188,4 @@ services:
         
 networks:
   panlog:
+

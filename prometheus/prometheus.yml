@@ -17,12 +17,12 @@ scrape_configs:
            
   - job_name: 'substrate-nodes'
     static_configs:
-      - targets: ['alice:9615']
+      - targets: ['thrall:9615']
         labels:
-          network: testnet
-      - targets: ['bob:9615']
+          network: local
+      - targets: ['jaina:9615']
         labels:
-          network: testnet
-      - targets: ['charlie:9615']
+          network: local
+      - targets: ['kairn:9615']
         labels:
-          network: testnet
+          network: local
