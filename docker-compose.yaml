@@ -1,6 +1,7 @@
 version: '3.7'
 
 services:
+  # root-validator node
   thrall:
     image: andskur/substrate:latest
     container_name: thrall
@@ -32,6 +33,7 @@ services:
              --validator
              --prometheus-external
 
+  # validator node
   jaina:
     image: andskur/substrate:latest
     container_name: jaina
@@ -64,6 +66,7 @@ services:
              --validator
              --prometheus-external
 
+  # no validator node
   kairn:
     image: andskur/substrate:latest
     container_name: kairn
@@ -90,9 +93,10 @@ services:
              --rpc-cors all
              --prometheus-external
 
-  panlog-ui:
+  ## frontend application
+  ui-app:
     image: andskur/substrate-ui:latest
-    container_name: panlog-ui
+    container_name: ui-app
     restart: always
     ports:
       - 80:80

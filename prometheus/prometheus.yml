@@ -7,14 +7,16 @@ scrape_configs:
     static_configs:
          - targets: ['localhost:9090']
 
+  # container resources
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
-        
+
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node-exporter:9100']
-           
+
+  # substrate metrics
   - job_name: 'substrate-nodes'
     static_configs:
       - targets: ['thrall:9615']

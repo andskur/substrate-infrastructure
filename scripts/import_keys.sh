@@ -44,10 +44,10 @@ else
 fi
 
 # Submit a new aura sr25519 key via RPC
-curl  ${NODE_RPC_ADR} -H "Content-Type:application/json;charset=utf-8" --data "$(generateRpcRequest aura $KEY_SR25519)"
-echo aura se25519 key successfully inserted to node via Json RPC on address ${NODE_RPC_ADR}
+curl  "${NODE_RPC_ADR}" -H "Content-Type:application/json;charset=utf-8" --data "$(generateRpcRequest aura $KEY_SR25519)"
+echo aura se25519 key successfully inserted to node via Json RPC on address "${NODE_RPC_ADR}"
 
 
 # Submit a new grandpa ed25519 key via RPC
-curl  ${NODE_RPC_ADR} -H "Content-Type:application/json;charset=utf-8" --data "$(generateRpcRequest gran $KEY_ED25519)"
-echo granpa ed25519 key successfully inserted to node via Json RPC on address ${NODE_RPC_ADR}
+curl  "${NODE_RPC_ADR}" -H "Content-Type:application/json;charset=utf-8" --data "$(generateRpcRequest gran $KEY_ED25519)"
+echo granpa ed25519 key successfully inserted to node via Json RPC on address "${NODE_RPC_ADR}"
