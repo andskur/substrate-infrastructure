@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jaina
+  name: jaina
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  selector:
+    matchLabels:
+      app: jaina
+  template:
+    metadata:
+      labels:
+        app: jaina
+    spec:
+      containers:
+        - name: jaina-node
+          image: andskur/substrate:latest
+          envFrom:
+            - secretRef:
+                name: jaina-authorities
+          volumeMounts:
+            - name: chainspec-volume
+              mountPath: /etc/config
+            - name: nodekey-volume
+              mountPath: /keys
+          #            - name: import-script
+          #              mountPath: /scripts
+          ports:
+            - containerPort: 30333
+              name: p2p
+            - containerPort: 9933
+              name: http-rpc
+            - containerPort: 9944
+              name: websocket-rpc
+          args:
+            - --name
+            - jaina
+            - --base-path
+            - "/data"
+            - --chain
+            - /etc/config/chainspec
+            - --node-key-file
+            - /keys/nodekey
+            - --port
+            - "30333"
+            - --ws-port
+            - "9944"
+            - --rpc-port
+            - "9933"
+            - --rpc-cors
+            - all
+            - --validator
+            - --unsafe-rpc-external
+            - --unsafe-ws-external
+
+      #          lifecycle:
+      #            postStart:
+      #              exec:
+      #                command:
+      #                  - /bin/sh
+      #                  - -c
+      #                  - |
+      #                    echo $KEY_MNEMONIC
+      #                    echo $KEY_SR25519
+      #                    echo $KEY_ED25519
+      #                    cp /scripts/import_keys /tmp/import_keys
+      #                    cd /tmp
+      #                    chmod +x import_keys
+      #                    ./import_keys
+
+      volumes:
+        - name: chainspec-volume
+          configMap:
+            name: chainspec
+            items:
+              - key: minikubeLocalSpecRaw.json
+                path: chainspec
+        #        - name: import-script
+        #          configMap:
+        #            name: import-script
+        #            items:
+        #              - key: import_keys.sh
+        #                path: import_keys
+        - name: nodekey-volume
+          secret:
+            secretName: jaina-p2p
+            items:
+              - key: node.key
+                path: nodekey
+      #        - name: chain-storage
+      #          persistentVolumeClaim:
+      #            claimName: jaina-claim
+
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000

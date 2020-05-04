@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ui-app
+  name: ui-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: ui-app
+    spec:
+      containers:
+      - image: andskur/substrate-ui:latest
+        imagePullPolicy: ""
+        name: ui-app
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+status: {}

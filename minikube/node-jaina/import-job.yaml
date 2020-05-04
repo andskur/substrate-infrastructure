@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: jaina
+  name: activate-jaina
+spec:
+  template:
+    spec:
+      containers:
+        - name: jaina-activation-job
+          image: curlimages/curl
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - secretRef:
+                name: jaina-authorities
+          volumeMounts:
+            - name: import-script
+              mountPath: /scripts
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /scripts/import_keys /tmp/import_keys
+              cd /tmp
+              chmod +x import_keys
+              ./import_keys http://jaina:9933
+      volumes:
+        - name: import-script
+          configMap:
+            name: import-script
+            items:
+              - key: import_keys.sh
+                path: import_keys
+      restartPolicy: Never
+

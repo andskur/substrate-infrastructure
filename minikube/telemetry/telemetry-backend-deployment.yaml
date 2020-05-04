@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: telemetry-backend
+  name: telemetry-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry-backend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: telemetry-backend
+    spec:
+      containers:
+        - name: telemetry-backend
+          image: andskur/telemetry-backend:latest
+          env:
+            - name: PORT
+              value: "8000"
+          ports:
+            - containerPort: 8080
+          args:
+            - -l
+            - 0.0.0.0:8000
+      restartPolicy: Always

@@ -10,7 +10,6 @@ services:
       - ./data/chain/thrall:/data
       - ./keys/thrall:/keys
       - ./chainSpec:/chainSpec
-      - ./scripts:/scripts  
     ports:
       - 9933:9933
       - 9944:9944
@@ -42,7 +41,6 @@ services:
       - ./data/chain/jaina:/data
       - ./keys/jaina:/keys
       - ./chainSpec:/chainSpec
-      - ./scripts:/scripts  
     ports:
       - 9934:9933
       - 9945:9944

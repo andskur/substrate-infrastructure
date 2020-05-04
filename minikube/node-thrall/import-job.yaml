@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: thrall
+  name: activate-thrall
+spec:
+  template:
+    spec:
+      containers:
+        - name: thrall-activation-job
+          image: curlimages/curl
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - secretRef:
+                name: thrall-authorities
+          volumeMounts:
+            - name: import-script
+              mountPath: /scripts
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /scripts/import_keys /tmp/import_keys
+              cd /tmp
+              chmod +x import_keys
+              ./import_keys http://thrall:9933
+      volumes:
+        - name: import-script
+          configMap:
+            name: import-script
+            items:
+              - key: import_keys.sh
+                path: import_keys
+      restartPolicy: Never
+
