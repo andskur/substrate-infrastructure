@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-importscript
+data:
+  import_keys.sh: |-
+    {{- (.Files.Glob "scripts/import_keys.sh").AsConfig | nindent 2 }}

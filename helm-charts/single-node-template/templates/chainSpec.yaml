@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-chainspec
+data:
+  chainSpecRaw.json: |-
+    {{- (.Files.Glob "chainSpec/chainSpecRaw.json").AsConfig | nindent 2 }}

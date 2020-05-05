@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: thrall
-  name: thrall
+    app: {{ .Values.app }}
+  name: {{ .Values.app }}
 spec:
   replicas: 1
   strategy:
@@ -14,23 +14,22 @@ spec:
   minReadySeconds: 5
   selector:
     matchLabels:
-      app: thrall
+      app: {{ .Values.app }}
   template:
     metadata:
       labels:
-        app: thrall
+        app: {{ .Values.app }}
     spec:
       containers:
-        - name: thrall-node
+        - name: {{ .Values.app }}-node
           image: andskur/substrate:latest
-          envFrom:
-            - secretRef:
-                name: thrall-authorities
           volumeMounts:
             - name: chainspec-volume
               mountPath: /etc/config
             - name: nodekey-volume
               mountPath: /keys
+            - name: chain-storage
+              mountPath: /data
           ports:
             - containerPort: 30333
               name: p2p
@@ -40,7 +39,7 @@ spec:
               name: ws
           args:
             - --name
-            - thrall
+            - {{ .Values.app }}
             - --base-path
             - "/data"
             - --chain
@@ -58,44 +57,40 @@ spec:
             - --validator
             - --unsafe-rpc-external
             - --unsafe-ws-external
-
-#          lifecycle:
-#            postStart:
-#              exec:
-#                command:
-#                  - /bin/sh
-#                  - -c
-#                  - |
-#                    echo $KEY_MNEMONIC
-#                    echo $KEY_SR25519
-#                    echo $KEY_ED25519
-#                    cp /scripts/import_keys /tmp/import_keys
-#                    cd /tmp
-#                    chmod +x import_keys
-#                    ./import_keys
-
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http-rpc
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http-rpc
+            initialDelaySeconds: 10
+            periodSeconds: 10
       volumes:
         - name: chainspec-volume
           configMap:
-            name: chainspec
+            name: {{ .Release.Name }}-chainspec
             items:
-              - key: minikubeLocalSpecRaw.json
+              - key: chainSpecRaw.json
                 path: chainspec
-#        - name: import-script
-#          configMap:
-#            name: import-script
-#            items:
-#              - key: import_keys.sh
-#                path: import_keys
         - name: nodekey-volume
           secret:
-            secretName: thrall-p2p
+            secretName: {{ .Values.app }}-keys
             items:
-              - key: node.key
+              - key: KEY_P2P
                 path: nodekey
-#        - name: chain-storage
-#          persistentVolumeClaim:
-#            claimName: thrall-claim
+      - name: nodekey-volume
+        secret:
+          secretName: {{ .Values.app }}-p2p
+          items:
+            - key: node.key
+              path: nodekey
+       - name: chain-storage
+         persistentVolumeClaim:
+           claimName: {{ .Values.app }}-claim
 
       securityContext:
         runAsUser: 1000

@@ -2,18 +2,21 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   labels:
-    app: thrall
-  name: activate-thrall
+    app: {{ .Values.app }}
+  name: {{ .Values.app }}-activate
+  annotations:
+    "helm.sh/hook": post-install
+#    "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   template:
     spec:
       containers:
-        - name: thrall-activation-job
+        - name: {{ .Values.app }}-activation-job
           image: curlimages/curl
           imagePullPolicy: "IfNotPresent"
           envFrom:
             - secretRef:
-                name: thrall-authorities
+                name: {{ .Values.app }}-keys
           volumeMounts:
             - name: import-script
               mountPath: /scripts
@@ -24,11 +27,11 @@ spec:
               cp /scripts/import_keys /tmp/import_keys
               cd /tmp
               chmod +x import_keys
-              sh import_keys http://thrall:9933
+              sh import_keys http://{{ .Values.app }}:9933
       volumes:
         - name: import-script
           configMap:
-            name: import-script
+            name: {{ .Release.Name }}-importscript
             items:
               - key: import_keys.sh
                 path: import_keys
