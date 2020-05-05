@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: telemetry-frontend
+  name: telemetry-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry-frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.network/panlog: "true"
+        app: telemetry-frontend
+    spec:
+      containers:
+        - name: telemetry-frontend
+          image: andskur/telemetry-frontend:latest
+          env:
+            - name: SUBSTRATE_TELEMETRY_URL
+              value: {{ .Values.backend.entrypoint }}
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

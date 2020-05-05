@@ -1,12 +1,15 @@
 image:
-  repository: andskur/substrate:latest
+  repository: andskur/substrate
   pullPolicy: IfNotPresent
   tag: latest
 
 # name of the application
 app: substrate
 
-validator: {}
+serviceAccount:
+  create: true
+
+validator:
 #  mnemonic:
 #  sr25519:
 #  ed25519:

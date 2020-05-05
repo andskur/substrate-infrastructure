@@ -20,16 +20,18 @@ spec:
       labels:
         app: {{ .Values.app }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
         - name: {{ .Values.app }}-node
-          image: andskur/substrate:latest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
             - name: chainspec-volume
               mountPath: /etc/config
             - name: nodekey-volume
               mountPath: /keys
-            - name: chain-storage
-              mountPath: /data
+#            - name: chain-storage
+#              mountPath: /data
           ports:
             - containerPort: 30333
               name: p2p
@@ -82,15 +84,9 @@ spec:
             items:
               - key: KEY_P2P
                 path: nodekey
-      - name: nodekey-volume
-        secret:
-          secretName: {{ .Values.app }}-p2p
-          items:
-            - key: node.key
-              path: nodekey
-       - name: chain-storage
-         persistentVolumeClaim:
-           claimName: {{ .Values.app }}-claim
+#        - name: chain-storage
+#          persistentVolumeClaim:
+#            claimName: {{ .Values.app }}-claim
 
       securityContext:
         runAsUser: 1000
