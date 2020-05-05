@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: telemetry-frontend
+  name: telemetry-frontend
+spec:
+  clusterIP: 10.106.71.237
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: telemetry-frontend
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

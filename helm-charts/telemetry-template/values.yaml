@@ -1,0 +1,8 @@
+app: telemetry-backend
+
+serviceAccount:
+  create: true
+  name: telemetry
+
+backend:
+  entrypoint: ws://telemetry-backend/feed

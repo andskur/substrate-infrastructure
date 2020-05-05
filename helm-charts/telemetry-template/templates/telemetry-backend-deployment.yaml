@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.app }}
+  name: {{ .Values.app }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: {{ .Values.app }}
+          image: andskur/telemetry-backend:latest
+          env:
+            - name: PORT
+              value: "8000"
+          ports:
+            - containerPort: 8000
+          args:
+            - -l
+            - 0.0.0.0:8000
+      restartPolicy: Always

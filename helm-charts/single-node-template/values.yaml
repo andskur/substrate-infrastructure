@@ -1,13 +1,16 @@
 image:
-  repository: andskur/substrate:latest
+  repository: andskur/substrate
   pullPolicy: IfNotPresent
   tag: latest
 
 # name of the application
 app: substrate
 
+serviceAccount:
+  create: true
+
 validator:
-  mnemonic: aG9zdCBwYWxhY2UgYW5rbGUgaHVydCBhdXR1bW4gZGlub3NhdXIgYXNzYXVsdCBhcHBsZSBjaGF0IGNvbnZpbmNlIGZlYXR1cmUgc29vbgo=
-  sr25519: MHg3MDdmYmQyNTZiMjk0MTQwZDUyMDI5ZDZmNjQ2NjE1OTcwYmM1YTI1OWFiNzExYWI2MjdmOTk4MzcwMzY1MDBiCg==
-  ed25519: MHhhNDliNjRiNmI2N2MxMmMyYWRmYzk1NDA1ZmQ0NjBkYjFiMDJiMTY2NjBlZjQ2ZTg3NGQ2MDIxOTE5OWM3YmRhCg==
-  p2p: TTe10e1V2x6Y2WZKotct76XhsNVj1MewrRlDlck/ZYk=
+#  mnemonic:
+#  sr25519:
+#  ed25519:
+#  p2p:
