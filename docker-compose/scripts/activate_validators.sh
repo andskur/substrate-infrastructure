@@ -6,12 +6,12 @@ set -a
 . ../keys/thrall/.env
 set +a
 
-./scripts/import_keys.sh
+../scripts/import_keys.sh
 
 set -a
 . ../keys/jaina/.env
 set +a
 
-./scripts/import_keys.sh http://localhost:9934
+../scripts/import_keys.sh http://localhost:9934
 
 echo all validators nodes activated
