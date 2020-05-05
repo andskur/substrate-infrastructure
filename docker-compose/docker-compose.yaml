@@ -8,7 +8,7 @@ services:
     restart: always
     volumes:
       - ./data/chain/thrall:/data
-      - ./keys/thrall:/keys
+      - ../keys/thrall:/keys
       - ./chainSpec:/chainSpec
     ports:
       - 9933:9933
@@ -39,7 +39,7 @@ services:
     restart: always
     volumes:
       - ./data/chain/jaina:/data
-      - ./keys/jaina:/keys
+      - ../keys/jaina:/keys
       - ./chainSpec:/chainSpec
     ports:
       - 9934:9933
