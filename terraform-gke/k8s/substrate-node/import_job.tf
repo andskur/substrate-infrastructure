@@ -1,4 +1,6 @@
 resource "kubernetes_job" "import_job" {
+  count = var.node_validator ? 1: 0
+  
   metadata {
     name = format("%s-activation",var.node_name)
     labels = {

@@ -60,16 +60,9 @@ resource "kubernetes_deployment" "node_deployyment" {
             name = "ws"
           }
 
-          args = [
-            "--name", var.node_name,
-            "--base-path", "/data",
-            "--chain", "/etc/config/chainspec",
-            "--node-key", "$(KEY_P2P)",
-            "--rpc-cors", "all",
-            "--validator",
-            "--unsafe-rpc-external",
-            "--unsafe-ws-external"
-          ]
+          args = var.node_validator?
+            concat(var.cli_arg, ["--validator", "--node-key", "$(KEY_P2P)", "--name", var.node_name]) :
+            concat(var.cli_arg, ["--name",var.node_name])
 
           readiness_probe {
             http_get {

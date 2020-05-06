@@ -32,5 +32,32 @@ resource "kubernetes_service" "node_service" {
       target_port = 30333
     }
 
+    type = "ClusterIP"
+  }
+}
+
+resource "kubernetes_service" "bootnode_service" {
+  count = var.node_bootnode ? 1: 0
+
+  metadata {
+    name = format("%s-bootnode", var.node_name)
+    labels = {
+      app = var.node_name
+    }
+  }
+
+  spec {
+    selector = {
+      app = var.node_name
+    }
+
+    port {
+      name        = "p2p"
+      protocol    = "TCP"
+      port        = 30333
+      target_port = 30333
+    }
+
+    type = "NodePort"
   }
 }
