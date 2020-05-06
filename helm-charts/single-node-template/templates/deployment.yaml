@@ -30,8 +30,8 @@ spec:
               mountPath: /etc/config
             - name: nodekey-volume
               mountPath: /keys
-#            - name: chain-storage
-#              mountPath: /data
+            - name: chain-storage
+              mountPath: /data
           ports:
             - containerPort: 30333
               name: p2p
@@ -84,9 +84,9 @@ spec:
             items:
               - key: KEY_P2P
                 path: nodekey
-#        - name: chain-storage
-#          persistentVolumeClaim:
-#            claimName: {{ .Values.app }}-claim
+        - name: chain-storage
+          persistentVolumeClaim:
+            claimName: {{ .Values.app }}-claim
 
       securityContext:
         runAsUser: 1000
