@@ -60,9 +60,7 @@ resource "kubernetes_deployment" "node_deployyment" {
             name = "ws"
           }
 
-          args = var.node_validator?
-            concat(var.cli_arg, ["--validator", "--node-key", "$(KEY_P2P)", "--name", var.node_name]) :
-            concat(var.cli_arg, ["--name",var.node_name])
+          args = var.node_validator? concat(var.cli_arg, ["--validator", "--node-key", "$(KEY_P2P)", "--name", var.node_name]):concat(var.cli_arg, ["--name",var.node_name])
 
           readiness_probe {
             http_get {

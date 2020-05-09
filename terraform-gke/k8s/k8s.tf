@@ -13,6 +13,10 @@ module "telemetry" {
   source   = "./telemetry"
 }
 
+module "monitoring" {
+  source = "./monitoring"
+}
+
 module "thrall" {
   source          = "./substrate-node"
   node_name       = "thrall"

@@ -45,5 +45,6 @@ variable "cli_arg" {
     "--rpc-cors", "all",
     "--unsafe-rpc-external",
     "--unsafe-ws-external",
+    "--prometheus-external"
   ]
 }
