@@ -16,12 +16,12 @@ scrape_configs:
   # substrate metrics
   - job_name: 'substrate-nodes'
     static_configs:
-      - targets: ['thrall:9615']
+      - targets: ['thrall.default:9615']
         labels:
           network: local
-      - targets: ['jaina:9615']
+      - targets: ['jaina.default:9615']
         labels:
           network: local
-      - targets: ['kairn:9615']
+      - targets: ['kairn.default:9615']
         labels:
           network: local

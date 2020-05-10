@@ -32,6 +32,13 @@ resource "kubernetes_service" "node_service" {
       target_port = 30333
     }
 
+    port {
+      name        = "prometheus"
+      protocol    = "TCP"
+      port        = 9615
+      target_port = 9615
+    }
+
     type = "ClusterIP"
   }
 }
