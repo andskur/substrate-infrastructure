@@ -5,7 +5,6 @@ resource "kubernetes_config_map" "prometheus_config" {
   }
 
   data = {
-    "prometheus.rules"  = file("${path.module}/cfg/prometheus.rules")
-    "prometheus.yml"    = file("${path.module}/cfg/prometheus.yml")
+    "prometheus.yml"    = templatefile("${path.module}/cfg/prometheus.tmpl",  local.monitoring_nodes)
   }
 }

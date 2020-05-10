@@ -73,3 +73,13 @@ resource "google_container_node_pool" "primary_nodes" {
     ]
   }
 }
+
+#####################################################################
+# Discs
+#####################################################################
+resource "google_compute_disk" "prometheus_volume" {
+  name = "prometheus-volume"
+  type = "pd-ssd"
+  zone = var.location
+  size = 50
+}
