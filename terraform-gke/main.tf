@@ -13,6 +13,8 @@ variable "username" {
 }
 variable "password" {}
 variable "project" {}
+variable "domain" {}
+variable "managed_zone" {}
 variable "location" {}
 variable "cluster_name" {}
 
@@ -33,6 +35,8 @@ variable "jaina_key_ed25519" {}
 module "gke" {
   source        = "./gke"
   project       = var.project
+  domain        = var.domain
+  managed_zone  = var.managed_zone
   location      = var.location
   password      = var.password
   cluster_name  = var.cluster_name
@@ -40,10 +44,11 @@ module "gke" {
 
 
 module "k8s" {
-  source   = "./k8s"
-  host     = "https://${module.gke.primary_host}"
-  username = var.username
-  password = var.password
+  source    = "./k8s"
+  host      = "https://${module.gke.primary_host}"
+  domain    = var.domain
+  username  = var.username
+  password  = var.password
 
   client_certificate     = module.gke.client_certificate
   client_key             = module.gke.client_key

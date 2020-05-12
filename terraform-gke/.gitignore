@@ -35,5 +35,3 @@ override.tf.json
 terraform.rc
 
 *.env
-
-account.json

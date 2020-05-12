@@ -7,14 +7,25 @@ variable "project" {
   type        = string
 }
 
+variable "domain" {
+  description = "the name of domain that will be used"
+  type        = string
+}
+
 variable "location" {
   description = "The location (region or zone) of the GKE cluster."
+  type        = string
+}
+
+variable "managed_zone" {
+  description = "DNZ zoned for managed domain"
   type        = string
 }
 
 variable "username" {
   default = "admin"
 }
+
 variable "password" {}
 
 #####################################################################
