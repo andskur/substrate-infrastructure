@@ -24,8 +24,9 @@ resource "kubernetes_deployment" "prometheus" {
       }
 
       spec {
-        service_account_name = var.cluster_role_name
+        service_account_name            = var.cluster_role_name
         automount_service_account_token = true
+
         container {
           name  = var.app_name
           image = "prom/prometheus"
@@ -74,4 +75,11 @@ resource "kubernetes_deployment" "prometheus" {
       }
     }
   }
+
+  depends_on = [
+    kubernetes_service_account.prometheus_account,
+    kubernetes_cluster_role_binding.prometheus_role,
+    kubernetes_persistent_volume_claim.prometheus_storage,
+    kubernetes_config_map.prometheus_config
+  ]
 }

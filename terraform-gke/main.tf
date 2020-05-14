@@ -6,38 +6,14 @@ terraform {
 }
 
 #####################################################################
-# Variables
-#####################################################################
-variable "username" {
-  default = "admin"
-}
-variable "password" {}
-variable "project" {}
-variable "domain" {}
-variable "managed_zone" {}
-variable "location" {}
-variable "cluster_name" {}
-
-variable "thrall_key_p2p" {}
-variable "thrall_key_mnemonic" {}
-variable "thrall_key_sr25519" {}
-variable "thrall_key_ed25519" {}
-
-variable "jaina_key_p2p" {}
-variable "jaina_key_mnemonic" {}
-variable "jaina_key_sr25519" {}
-variable "jaina_key_ed25519" {}
-
-
-#####################################################################
 # Modules
 #####################################################################
 module "gke" {
-  source        = "./gke"
+  source        = "./gcp"
   project       = var.project
   domain        = var.domain
-  managed_zone  = var.managed_zone
   location      = var.location
+  username      = var.username
   password      = var.password
   cluster_name  = var.cluster_name
 }
@@ -65,4 +41,10 @@ module "k8s" {
   jaina_key_mnemonic = var.jaina_key_mnemonic
   jaina_key_sr25519  =  var.jaina_key_sr25519
   jaina_key_ed25519  =  var.jaina_key_ed25519
+
+
+  arthas_key_p2p      = var.arthas_key_p2p
+  arthas_key_mnemonic = var.arthas_key_mnemonic
+  arthas_key_sr25519  =  var.arthas_key_sr25519
+  arthas_key_ed25519  =  var.arthas_key_ed25519
 }

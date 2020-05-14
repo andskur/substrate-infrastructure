@@ -1,10 +1,10 @@
 resource "kubernetes_job" "import_job" {
-  count = var.node_validator ? 1: 0
-  
+  count = length(local.validators)
+
   metadata {
-    name = format("%s-activation",var.node_name)
+    name = format("%s-activation", local.validators[count.index])
     labels = {
-      app = var.node_name
+      app = local.validators[count.index]
     }
   }
 
@@ -14,13 +14,13 @@ resource "kubernetes_job" "import_job" {
 
       spec {
         container {
-          name                = format("%s-activation",var.node_name)
+          name                = format("%s-activation",local.validators[count.index])
           image               = "curlimages/curl"
           image_pull_policy   = "IfNotPresent"
 
           env_from {
             secret_ref {
-              name = format("%s-keys", var.node_name)
+              name = format("%s-keys", local.validators[count.index])
             }
           }
 
@@ -32,7 +32,7 @@ resource "kubernetes_job" "import_job" {
           command = [
             "/bin/sh",
             "-c",
-            "echo $(KEY_MNEMONIC) && echo $(KEY_SR25519) && echo $(KEY_ED25519) && cp /scripts/import_keys /tmp/import_keys && cd /tmp && chmod +x import_keys && ls -la && sh import_keys ${format("http://%s:9933", var.node_name)}",
+            "echo $(KEY_MNEMONIC) && echo $(KEY_SR25519) && echo $(KEY_ED25519) && cp /scripts/import_keys /tmp/import_keys && cd /tmp && chmod +x import_keys && ls -la && sh import_keys ${format("http://%s:9933", local.validators[count.index])}",
           ]
         }
 

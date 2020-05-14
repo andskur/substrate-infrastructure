@@ -6,7 +6,7 @@ resource "kubernetes_config_map" "grafana_dashboard" {
 
   data = {
     "dashboards.yml"            = file("${path.module}/provisioning/dashboards/dashboards.yml")
-    "substrate-dashboard.json"  = file("${path.module}/provisioning/dashboards/substrate-dashboard.json")
+//    "substrate-dashboard.json"  = file("${path.module}/provisioning/dashboards/substrate-dashboard.json")
     "kubernetes-metrics.json"   = file("${path.module}/provisioning/dashboards/kubernetes-metrics.json")
   }
 }

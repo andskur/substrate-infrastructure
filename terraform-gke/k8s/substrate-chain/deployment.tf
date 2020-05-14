@@ -1,8 +1,10 @@
 resource "kubernetes_deployment" "node_deployyment" {
+  for_each = var.nodes
+
   metadata {
-    name = var.node_name
+    name = each.key
     labels = {
-      app = var.node_name
+      app = each.key
     }
   }
 
@@ -11,20 +13,20 @@ resource "kubernetes_deployment" "node_deployyment" {
 
     selector {
       match_labels = {
-        app = var.node_name
+        app = each.key
       }
     }
 
     template {
       metadata {
         labels = {
-          app = var.node_name
+          app = each.key
         }
       }
 
       spec {
         container {
-          name  = var.node_name
+          name  = each.key
           image = var.node_image
 
           volume_mount {
@@ -37,12 +39,15 @@ resource "kubernetes_deployment" "node_deployyment" {
             name        = "chainspec-volume"
           }
 
-          env {
-            name = "KEY_P2P"
-            value_from {
-              secret_key_ref {
-                name  = format("%s-keys", var.node_name)
-                key   = "KEY_P2P"
+          dynamic "env" {
+            for_each = each.value.keys
+            content {
+              name = upper(env.key)
+              value_from {
+                secret_key_ref {
+                  name  = format("%s-keys", each.key)
+                  key   = upper(env.key)
+                }
               }
             }
           }
@@ -60,7 +65,7 @@ resource "kubernetes_deployment" "node_deployyment" {
             name = "ws"
           }
 
-          args = var.node_validator? concat(var.cli_arg, ["--validator", "--node-key", "$(KEY_P2P)", "--name", var.node_name]):concat(var.cli_arg, ["--name",var.node_name])
+          args = length(each.value.keys) > 0 ? concat(local.cli_args, ["--validator", "--node-key", "$(KEY_P2P)", "--name", each.key]):concat(local.cli_args, ["--name",each.key])
 
           readiness_probe {
             http_get {
@@ -83,7 +88,7 @@ resource "kubernetes_deployment" "node_deployyment" {
         volume {
           name = "chain-storage"
           persistent_volume_claim {
-            claim_name = format("%s-claim", var.node_name)
+            claim_name = format("%s-claim", each.key)
           }
         }
 
@@ -105,4 +110,10 @@ resource "kubernetes_deployment" "node_deployyment" {
       }
     }
   }
+
+  depends_on = [
+    kubernetes_config_map.chainspec,
+    kubernetes_persistent_volume.node_storage,
+    kubernetes_secret.node_keys
+  ]
 }

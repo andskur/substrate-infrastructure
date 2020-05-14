@@ -29,7 +29,7 @@ resource "kubernetes_deployment" "telemetry-frontend" {
 
           env {
             name  = "SUBSTRATE_TELEMETRY_URL"
-            value = "ws://35.228.108.78:8000/feed"
+            value = "ws://35.228.71.147:8000/feed"
           }
 
           port {

@@ -5,29 +5,28 @@ resource "kubernetes_ingress" "main_ingress" {
     annotations = {
       "kubernetes.io/ingress.global-static-ip-name" = trimsuffix(var.domain, ".com")
       "ingress.gcp.kubernetes.io/pre-shared-cert"   = trimsuffix(var.domain, ".com")
-      "kubernetes.io/ingress.allow-http"            = true
-      "ingress.kubernetes.io/force-ssl-redirect"    = false
+      "kubernetes.io/ingress.allow-http"            = false
+      "ingress.kubernetes.io/force-ssl-redirect"    = true
     }
   }
 
   spec {
-
-    tls {
-      hosts = [
-        "uddug.com",
-        "telemetry.uddug.com"
-      ]
-      secret_name = "uddug"
-    }
-
     rule {
-      host = "telemetry.uddug.com"
+      host = "uddug.com"
       http {
         path {
           path = "/*"
           backend {
             service_name = "telemetry-frontend"
             service_port = "80"
+          }
+        }
+
+        path {
+          path = "/ws/*"
+          backend {
+            service_name = "telemetry-backend"
+            service_port = 8000
           }
         }
       }

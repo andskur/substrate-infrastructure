@@ -19,8 +19,11 @@ resource "kubernetes_service" "prometheus" {
     type = "NodePort"
 
     port {
+      name        = "prometheus"
       port        = 9090
       target_port = 9090
     }
   }
+
+  depends_on = [kubernetes_deployment.prometheus]
 }

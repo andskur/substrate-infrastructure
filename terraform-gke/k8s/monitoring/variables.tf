@@ -2,11 +2,13 @@
 # Variables
 #####################################################################
 variable "namespace_name" {
-  default = "monitoring"
-  type    = string
+  type        = string
+  description = "monitoring services namespace"
+  default     = "monitoring"
 }
 
 variable "cluster_role_name" {
-  default = "monitoring"
-  type    = string
+  type        = string
+  description = "monitoring services role"
+  default     = "monitoring"
 }
