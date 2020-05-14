@@ -5,6 +5,10 @@ resource "kubernetes_service" "prometheus" {
     labels = {
       app = var.app_name
     }
+
+    annotations = {
+      "prometheus.io/scrape" = true
+    }
   }
 
   spec {

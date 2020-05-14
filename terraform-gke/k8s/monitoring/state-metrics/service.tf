@@ -5,6 +5,10 @@ resource "kubernetes_service" "kube-state-metrics" {
     labels = {
       app = var.app_name
     }
+
+    annotations = {
+      "prometheus.io/scrape" = true
+    }
   }
 
   spec {
