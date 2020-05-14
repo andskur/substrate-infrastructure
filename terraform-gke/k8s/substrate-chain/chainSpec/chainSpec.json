@@ -3,7 +3,7 @@
   "id": "andskur_live",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/QmddHFDeE52gaZTgshFyATLrBtnGrMQVG6824K6Wsj47KJ",
+    "/ip4/127.0.0.1/tcp/30333/p2p/QmddHFDeE52gaZTgshFyATLrBtnGrMQVG6824K6Wsj47KJ"
   ],
   "telemetryEndpoints": [
     ["ws://telemetry-backend:8000/submit", 0]
