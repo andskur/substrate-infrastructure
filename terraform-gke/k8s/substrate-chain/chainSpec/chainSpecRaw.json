@@ -3,7 +3,8 @@
   "id": "andskur_live",
   "chainType": "Live",
   "bootNodes": [
-    "/ip4/127.0.0.1/tcp/30333/p2p/QmddHFDeE52gaZTgshFyATLrBtnGrMQVG6824K6Wsj47KJ"
+    "/dns4/thrall/tcp/30333/p2p/QmddHFDeE52gaZTgshFyATLrBtnGrMQVG6824K6Wsj47KJ",
+    "/dns4/jaina/tcp/30333/p2p/QmUHwXvPPotLNXyvaRYNUpehaBwYtwwStw6n2SsR23MuhX"
   ],
   "telemetryEndpoints": [
     [
